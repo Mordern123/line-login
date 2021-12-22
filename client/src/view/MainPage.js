@@ -4,7 +4,7 @@ import { useEffect } from "react";
 const MainPage = () => {
     useEffect(() => {
         getQueryStringCode();
-    },[]);
+    }, []);
     const getQueryStringCode = () => {
         const urlSearchParams = new URLSearchParams(window.location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
@@ -13,10 +13,14 @@ const MainPage = () => {
             .then((response) => console.log(response))
             .catch((error) => console.log(error));
     }
-    const toManageUser = () => {
-        window.location="http://localhost:3000/MainPage/ManageUser";
+    const toManageUser = async() => {
+        // let userData = await axios.get(`http://localhost:5000/getAllUserData`);
+        // if (userData.data.user_id === "U7c608676ce776a29adff2f9d3a071769") {
+        //     window.location = "http://localhost:3000/MainPage/ManageUser";
+        // }
+        window.location = "http://localhost:3000/MainPage/ManageUser";
     }
-    
+
     return (
         <div>
             {/* <button className="line" type="button" onClick={getQueryStringCode}><img src="http://i.imgur.com/G1k3U44.png" alt="rr" /></button> */}
