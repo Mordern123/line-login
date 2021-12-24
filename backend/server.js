@@ -1,11 +1,15 @@
 import axios from "axios";
 // import qs from "qs";
 import mongoose from "mongoose";
-import express from "express";
+import express, { response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import logger from "morgan";
 import UserModel from "./models/UserModel.js";
+import line from "@line/bot-sdk";
+
+const serverClient = "8a47-220-132-170-63.ngrok.io";
+// const serverBackend = "ee99-220-132-170-63.ngrok.io";
 
 const API_PORT = 5000;
 const app = express();
@@ -32,7 +36,7 @@ const loginCode = async (req, res) => {
   const params = new URLSearchParams()
   params.append('grant_type', 'authorization_code')
   params.append('code', code)
-  params.append('redirect_uri', 'http://localhost:3000/MainPage')
+  params.append('redirect_uri', `https://${serverClient}/MainPage`)
   params.append('client_id', '1656732672')
   params.append('client_secret', '334e14cd00c2aa300dcbe8ebb49fd505')
   const config = {
@@ -73,7 +77,7 @@ function JWTtoPayload(idToken) {
 
 //登入時將使用者資料存入資料庫
 const new_user = async () => {
-  let isExist = await UserModel.exists({ user_id:dataSub });
+  let isExist = await UserModel.exists({ user_id: dataSub });
   if (isExist) {
     console.log("已有此帳號");
     const filter = { user_id: dataSub };
@@ -96,6 +100,25 @@ const getAllUserData = async (req, res) => {
   res.json(AllUserData);
 }
 
+const answerUser = async (req, res) => {
+  const { text, id } = req.body;
+  console.log("123:"+text);
+  const client = new line.Client({
+    channelAccessToken: 'Cg0kfzBWpekTkuuey3ViFKhp3gnnlQz3fCyDZSSihiZdVckSrcnmKLxe4qgZLsZS3oA45cLAf2BO/yXHI9cSdVBOR3cpimljAwThPTPGD5fOH7R+qYWpz2NlbmdJ1lAawiVkFMWXrhYarO4bZVI/bQdB04t89/1O/w1cDnyilFU='
+  });
+  const message = {
+    type: 'text',
+    text: text
+  };
+  client.pushMessage(id , message)
+    .then(() => {
+    })
+    .catch((err) => {
+    });
+  res.json(123);
+}
+
 app.get('/login', loginCode);
 app.get('/getAllUserData', getAllUserData);
+app.post('/answerUser', answerUser);
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

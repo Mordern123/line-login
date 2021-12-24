@@ -94,3 +94,7 @@ body{
     cursor:pointer;
 }
 
+.LinePicture{
+	height:200px;
+    width:200px;
+}
