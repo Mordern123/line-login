@@ -19,6 +19,10 @@ const UserDataSchema = new Schema(
         required: true,
         trim: true,
     },
+    user_group: {
+        type: String,
+        trim: true,
+    },
 });
 
 const UserModel = mongoose.model("UserModel", UserDataSchema, 'UserModel');

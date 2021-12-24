@@ -1,9 +1,11 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const serverClient = "8a47-220-132-170-63.ngrok.io";
 const serverBackend = "f6e7-220-132-170-63.ngrok.io";
+
 const MainPage = () => {
+    const [AllUserData, getAllUserFuc] = useState([]);
     useEffect(() => {
         getQueryStringCode();
     }, []);
@@ -15,11 +17,7 @@ const MainPage = () => {
             .then((response) => console.log(response))
             .catch((error) => console.log(error));
     }
-    const toManageUser = () => {
-        // let userData = await axios.get(`http://localhost:5000/getAllUserData`);
-        // if (userData.data.user_id === "U7c608676ce776a29adff2f9d3a071769") {
-        //     window.location = "http://localhost:3000/MainPage/ManageUser";
-        // }
+    const toManageUser = async() => {
         window.location = `https://${serverClient}/MainPage/ManageUser`;
     }
 

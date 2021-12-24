@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 import logger from "morgan";
 import UserModel from "./models/UserModel.js";
 import line from "@line/bot-sdk";
+// import { forEach } from "lodash";
 
 const serverClient = "8a47-220-132-170-63.ngrok.io";
 // const serverBackend = "ee99-220-132-170-63.ngrok.io";
@@ -56,6 +57,7 @@ const loginCode = async (req, res) => {
 let dataSub = '';//存入資料庫的全域變數(接result.data)
 let dataName = '';
 let dataPicture = '';
+// let dataGroup = '';
 function JWTtoPayload(idToken) {
   const JWTparams = new URLSearchParams()
   JWTparams.append('id_token', idToken)
@@ -91,6 +93,7 @@ const new_user = async () => {
     user_id: dataSub,
     user_name: dataName,
     user_picture: dataPicture,
+    user_group: '',
   }).save();
 }
 
@@ -100,9 +103,10 @@ const getAllUserData = async (req, res) => {
   res.json(AllUserData);
 }
 
+//一對一發送
 const answerUser = async (req, res) => {
+
   const { text, id } = req.body;
-  console.log("123:"+text);
   const client = new line.Client({
     channelAccessToken: 'Cg0kfzBWpekTkuuey3ViFKhp3gnnlQz3fCyDZSSihiZdVckSrcnmKLxe4qgZLsZS3oA45cLAf2BO/yXHI9cSdVBOR3cpimljAwThPTPGD5fOH7R+qYWpz2NlbmdJ1lAawiVkFMWXrhYarO4bZVI/bQdB04t89/1O/w1cDnyilFU='
   });
@@ -110,7 +114,7 @@ const answerUser = async (req, res) => {
     type: 'text',
     text: text
   };
-  client.pushMessage(id , message)
+  client.pushMessage(id, message)
     .then(() => {
     })
     .catch((err) => {
@@ -118,7 +122,42 @@ const answerUser = async (req, res) => {
   res.json(123);
 }
 
+//群發
+const answerGroup = async (req, res) => {
+  const { userGroup, textGroup } = req.query;
+  let group = await UserModel.find({ user_group: userGroup });
+  // console.log(group);
+  const client = new line.Client({
+    channelAccessToken: 'Cg0kfzBWpekTkuuey3ViFKhp3gnnlQz3fCyDZSSihiZdVckSrcnmKLxe4qgZLsZS3oA45cLAf2BO/yXHI9cSdVBOR3cpimljAwThPTPGD5fOH7R+qYWpz2NlbmdJ1lAawiVkFMWXrhYarO4bZVI/bQdB04t89/1O/w1cDnyilFU='
+  });
+  const message = {
+    type: 'text',
+    text: textGroup
+  };
+  group.map((number) => {
+    client.pushMessage(number.user_id, message)
+      .then(() => {
+      })
+      .catch((err) => {
+      });
+  });
+  res.json(123);
+}
+
+//更新群組
+const userGroup = async (req, res) => {
+  const { dataId, dataGroup } = req.query;
+  const filter = { user_id: dataId };
+  const update = { user_group: dataGroup };
+  let doc = await UserModel.findOneAndUpdate(filter, update, {
+    new: true
+  });
+  res.json('successGroup');
+}
+
 app.get('/login', loginCode);
 app.get('/getAllUserData', getAllUserData);
 app.post('/answerUser', answerUser);
+app.get('/userGroup', userGroup);
+app.get('/answerGroup', answerGroup);
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
