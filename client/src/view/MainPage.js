@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const serverClient = "8a47-220-132-170-63.ngrok.io";
-const serverBackend = "f6e7-220-132-170-63.ngrok.io";
+const serverClient = "5099-2401-e180-8801-6a65-1ccd-16fd-96a0-acae.ngrok.io";
+const serverBackend = "1000-2401-e180-8801-6a65-1ccd-16fd-96a0-acae.ngrok.io";
 
 const MainPage = () => {
     const [AllUserData, getAllUserFuc] = useState([]);

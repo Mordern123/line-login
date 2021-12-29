@@ -1,12 +1,20 @@
 import axios from "axios";
+import { MultiSelect } from "react-multi-select-component";
 import { useEffect, useState } from "react";
 import './ManageUser.css';
 
-const serverClient = "8a47-220-132-170-63.ngrok.io";
-const serverBackend = "f6e7-220-132-170-63.ngrok.io";
+const serverClient = "5099-2401-e180-8801-6a65-1ccd-16fd-96a0-acae.ngrok.io";
+const serverBackend = "1000-2401-e180-8801-6a65-1ccd-16fd-96a0-acae.ngrok.io";
+// const options = [
+//     { label: "Grapes 👨", value: "grapes" },
+//     { label: "Mango 👨", value: "mango" },
+//     { label: "Strawberry 🍓", value: "strawberry"},
+// ];
 const ManageUser = () => {
+
+    const [selected, setSelected] = useState([]);//multiselect
+
     let AllUserData1 = [];
-    // const AllUser = [];
     const [text, getTextFuc] = useState("");
     const [textGroup, getTextGroup] = useState("");
     const [AllUserData, getAllUserFuc] = useState([]);
@@ -16,7 +24,7 @@ const ManageUser = () => {
     useEffect(() => {
         getAllUserData();
     }, []);
-
+    
     const getAllUserData = async () => {
 
         let userData = await axios.get(`https://${serverBackend}/getAllUserData`);
@@ -28,6 +36,7 @@ const ManageUser = () => {
             AllUserData1.push(data123);
         }
         getAllUserFuc(AllUserData1);
+        console.log("eric:"+AllUserData1[0].name);
     }
     const lineMessage = async () => {
         // console.log(UserSub);
@@ -53,6 +62,11 @@ const ManageUser = () => {
     }
 
     let kindarray = [];
+    const options = [
+        // { label={number.name}, value: "grapes" },
+        { label: "Mango 👨", value: "mango" },
+        { label: "Strawberry 🍓", value: "strawberry"},
+    ];
     const listItem = AllUserData.map((number) =>
         <li key={number.name}>
             <img src={number.picture} alt="Dataphoto" className="userPicture" />
@@ -90,6 +104,16 @@ const ManageUser = () => {
 
         <div>
             <button type="button" onClick={toLoginUser}>登出</button>
+            <div>
+                <h1>Select User</h1>
+                {/* <pre>{JSON.stringify(selected)}</pre> */}
+                <MultiSelect
+                    options={options}
+                    value={selected}
+                    onChange={setSelected}
+                    labelledBy="Select"
+                />
+            </div>
             <h1>所有使用者資料：</h1>
             <ul>
                 {listItem}
