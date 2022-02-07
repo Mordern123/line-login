@@ -9,7 +9,7 @@ import UserModel from "./models/UserModel.js";
 import line from "@line/bot-sdk";
 // import { forEach } from "lodash";
 
-const serverClient = "5099-2401-e180-8801-6a65-1ccd-16fd-96a0-acae.ngrok.io";
+const serverClient = "e8ee-220-132-170-63.ngrok.io";
 // const serverBackend = "ee99-220-132-170-63.ngrok.io";
 
 const API_PORT = 5000;
